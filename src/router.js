@@ -13,8 +13,10 @@ import index from './components/index.vue'
 
 //路由规则
 const routes=[
+    //1.登录的规则
     {path:'/login',component:login},
-    {path:'/index',component:index},
+    // 2.首页的规则  (为什么这里的首页规则的地址不写出/index而写出'/')=>为了方便后面点击'左侧'的子菜单跳转的路径和实例代码一样
+    {path:'/',component:index},
 ]
 
 // 实例化路由对象;

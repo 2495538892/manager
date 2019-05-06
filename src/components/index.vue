@@ -16,13 +16,13 @@
     <el-container class="container">
       <!-- 左侧 -->
       <el-aside width="200px" class="aside">
-        <el-menu default-active="2" class="el-menu-vertical-demo">
+        <el-menu router default-active="2" class="el-menu-vertical-demo">
           <el-submenu index="1">
             <template slot="title">
               <i class="el-icon-location"></i>
               <span>用户管理</span>
             </template>
-            <el-menu-item index="1-1">
+            <el-menu-item index="users">
               <i class="el-icon-menu"></i>用户列表
             </el-menu-item>
           </el-submenu>
