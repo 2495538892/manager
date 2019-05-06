@@ -29,7 +29,11 @@ import params from './components/params.vue'
 // 导入嵌套路由6
 import categories from './components/categories.vue'
 
+// 导入嵌套路由7
+import orders from './components/orders.vue'
 
+// 导入嵌套路由8
+import reports from './components/reports.vue'
 //路由规则
 const routes = [
     //1.登录的规则
@@ -52,6 +56,10 @@ const routes = [
             { path: 'params', component: params },
             // 嵌套路由规则6
             { path: 'categories', component: categories },
+            // 嵌套路由规则7
+            { path: 'orders', component: orders },
+            // 嵌套路由规则8
+            { path: 'reports', component: reports },
         ]
 
     },
