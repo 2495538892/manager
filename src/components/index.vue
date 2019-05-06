@@ -54,7 +54,7 @@ export default {
       background: skyblue;
     }
     .main {
-      background: green;
+      background: #eeeeff;
     }
   }
 }
