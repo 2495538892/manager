@@ -14,7 +14,21 @@
       </el-row>
     </el-header>
     <el-container class="container">
-      <el-aside width="200px" class="aside">Aside</el-aside>
+      <!-- 左侧 -->
+      <el-aside width="200px" class="aside">
+        <el-menu default-active="2" class="el-menu-vertical-demo">
+          <el-submenu index="1">
+            <template slot="title">
+              <i class="el-icon-location"></i>
+              <span>用户管理</span>
+            </template>
+            <el-menu-item index="1-1">
+              <i class="el-icon-menu"></i>用户列表
+            </el-menu-item>
+          </el-submenu>
+        </el-menu>
+      </el-aside>
+      <!-- 左侧 -->
       <el-main class="main">Main</el-main>
     </el-container>
   </el-container>
@@ -29,16 +43,16 @@ export default {
 <style lang='scss'>
 .father-box {
   height: 100%;
-  .header{
-      background: #bbccdd
+  .header {
+    background: #bbccdd;
   }
-  .container{
-      .aside{
-          background: pink;
-      }
-      .main{
-          background: green;
-      }
+  .container {
+    .aside {
+      background: skyblue;
+    }
+    .main {
+      background: green;
+    }
   }
 }
 </style>
