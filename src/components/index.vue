@@ -16,6 +16,7 @@
     <el-container class="container">
       <!-- 左侧 -->
       <el-aside width="200px" class="aside">
+          <!--点击跳转使用  router属性 不写就默认是false 写了默认是true  -->
         <el-menu router default-active="2" class="el-menu-vertical-demo">
           <el-submenu index="1">
             <template slot="title">
@@ -29,7 +30,9 @@
         </el-menu>
       </el-aside>
       <!-- 左侧 -->
-      <el-main class="main">Main</el-main>
+      <el-main class="main">
+          <router-view></router-view>
+      </el-main>
     </el-container>
   </el-container>
 </template>
