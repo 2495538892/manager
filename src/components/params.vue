@@ -4,8 +4,8 @@
     <div class="bread-header">
       <el-breadcrumb separator-class="el-icon-arrow-right" class="bread">
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item>用户管理</el-breadcrumb-item>
-        <el-breadcrumb-item>用户列表</el-breadcrumb-item>
+        <el-breadcrumb-item>商品管理</el-breadcrumb-item>
+        <el-breadcrumb-item>分类参数</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <!-- 输入框和添加用户  -->
@@ -46,7 +46,7 @@
 
 <script>
 export default {
-  name: "users",
+  name: "params",
   data: function() {
     return {
       tableData: [

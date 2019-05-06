@@ -14,6 +14,21 @@ import index from './components/index.vue'
 // 3.导入嵌套路由1
 import users from './components/users.vue'
 
+// 导入嵌套路由2
+import roles from './components/roles.vue'
+
+// 导入嵌套路由3
+import rights from './components/rights.vue'
+
+// 导入嵌套路由4
+import goods from './components/goods.vue'
+
+// 导入嵌套路由5
+import params from './components/params.vue'
+
+// 导入嵌套路由6
+import categories from './components/categories.vue'
+
 
 //路由规则
 const routes = [
@@ -26,7 +41,17 @@ const routes = [
         // 3.嵌套路由规则
         children: [
             //嵌套路由规则1
-            { path: 'users', component: users }
+            { path: 'users', component: users },
+            // 嵌套路由规则2
+            { path: 'roles', component: roles },
+            // 嵌套路由规则3
+            { path: 'rights', component: rights },
+            // 嵌套路由规则4
+            { path: 'goods', component: goods },
+            // 嵌套路由规则5
+            { path: 'params', component: params },
+            // 嵌套路由规则6
+            { path: 'categories', component: categories },
         ]
 
     },

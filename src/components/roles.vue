@@ -4,20 +4,15 @@
     <div class="bread-header">
       <el-breadcrumb separator-class="el-icon-arrow-right" class="bread">
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item>用户管理</el-breadcrumb-item>
-        <el-breadcrumb-item>用户列表</el-breadcrumb-item>
+        <el-breadcrumb-item>权限管理</el-breadcrumb-item>
+        <el-breadcrumb-item>角色列表</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <!-- 输入框和添加用户  -->
     <div class="users-btn">
       <el-row>
-        <el-col :span="6">
-          <el-input placeholder="请输入内容" class="input-with-select">
-            <el-button slot="append" icon="el-icon-search"></el-button>
-          </el-input>
-        </el-col>
-        <el-col :span="6">
-          <el-button type="success" plain>成功按钮</el-button>
+        <el-col :span="24">
+          <el-button type="success" plain>添加角色</el-button>
         </el-col>
       </el-row>
     </div>
@@ -31,22 +26,12 @@
       </el-table>
     </div>
 
-    <!-- 分页 -->
-    <div class="pagination">
-      <el-pagination
-        :current-page="1"
-        :page-sizes="[10, 20, 30, 40]"
-        :page-size="10"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="100"
-      ></el-pagination>
-    </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: "users",
+  name: "roles",
   data: function() {
     return {
       tableData: [

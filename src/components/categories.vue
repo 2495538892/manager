@@ -4,20 +4,15 @@
     <div class="bread-header">
       <el-breadcrumb separator-class="el-icon-arrow-right" class="bread">
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item>用户管理</el-breadcrumb-item>
-        <el-breadcrumb-item>用户列表</el-breadcrumb-item>
+        <el-breadcrumb-item>商品管理</el-breadcrumb-item>
+        <el-breadcrumb-item>商品参数</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <!-- 输入框和添加用户  -->
     <div class="users-btn">
       <el-row>
-        <el-col :span="6">
-          <el-input placeholder="请输入内容" class="input-with-select">
-            <el-button slot="append" icon="el-icon-search"></el-button>
-          </el-input>
-        </el-col>
-        <el-col :span="6">
-          <el-button type="success" plain>成功按钮</el-button>
+        <el-col :span="24">
+          <el-button type="success" plain>添加分类</el-button>
         </el-col>
       </el-row>
     </div>
@@ -46,7 +41,7 @@
 
 <script>
 export default {
-  name: "users",
+  name: "categories",
   data: function() {
     return {
       tableData: [
@@ -83,8 +78,5 @@ export default {
   .bread {
     line-height: 40px;
   }
-}
-.users-btn {
-  margin: 5px 0;
 }
 </style>
