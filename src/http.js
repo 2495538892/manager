@@ -11,7 +11,7 @@ const request = {
     // 封装获取用户列表的请求
     getuser(params) {
         return axios.get('users', {
-            params, headers: {
+            params, headers: { //第一个为需要传入的参数,第二个文档规定要设置;
                 Authorization: sessionStorage.getItem('token')
             }
         })
