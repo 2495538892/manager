@@ -2,15 +2,21 @@
   <div class="login">
     <div class="center-box">
       <h2>用户登录</h2>
-      <el-form label-position="top" label-width="80px" :model="loginForm" :rules="loginrules">
+      <el-form
+        label-position="top"
+        label-width="80px"
+        :model="loginForm"
+        :rules="loginrules"
+        ref="rulesForm"
+      >
         <el-form-item label="用户名" prop="username">
           <el-input v-model="loginForm.username"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password">
-          <el-input v-model="loginForm.password" type='password'></el-input>
+          <el-input v-model="loginForm.password" type="password"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" class="my-btn">登录</el-button>
+          <el-button type="primary" class="my-btn" @click="submitForm('rulesForm')">登录</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -34,10 +40,31 @@ export default {
         ],
         password: [
           { required: true, message: "请输入密码", trigger: "blur" },
-          { min: 6, max: 12, message: "长度在 6 到 12 个字符", trigger: "change" }
+          {
+            min: 6,
+            max: 12,
+            message: "长度在 6 到 12 个字符",
+            trigger: "change"
+          }
         ]
       }
     };
+  },
+  // 方法;
+  methods: {
+    // 点击登录验证表单格式的方法;绑定点击事件传入一个参数 ,然后通过设置ref属性等于传入的参数(字符串的参数)
+    submitForm(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          // 格式正确
+        this.$message.success('登录成功')
+        } else {
+          //格式错误
+          this.$message.error("用户名或密码格式错误");
+          return false;
+        }
+      });
+    }
   }
 };
 </script>
