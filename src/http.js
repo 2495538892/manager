@@ -2,11 +2,19 @@
 import axios from 'axios';
 
 // 设置基地址
-axios.defaults.baseURL='http://localhost:8888/api/private/v1/'
+axios.defaults.baseURL = 'http://localhost:8888/api/private/v1/'
 
 const request = {
-    login(params){
-       return axios.post('login',params);
+    login(params) {
+        return axios.post('login', params);
+    },
+    // 封装获取用户列表的请求
+    getuser(params) {
+        return axios.get('users', {
+            params, headers: {
+                Authorization: sessionStorage.getItem('token')
+            }
+        })
     }
 }
 

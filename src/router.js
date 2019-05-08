@@ -44,6 +44,8 @@ const routes = [
 
         // 3.嵌套路由规则
         children: [
+            //重定向;
+            {path:'',redirect: '/users'},
             //嵌套路由规则1
             { path: 'users', component: users },
             // 嵌套路由规则2

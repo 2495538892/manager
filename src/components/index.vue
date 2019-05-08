@@ -3,13 +3,17 @@
     <el-header class="header">
       <el-row>
         <el-col :span="8">
-          <div class="grid-content bg-purple"></div>
+          <div class="grid-content bg-purple">IG</div>
         </el-col>
         <el-col :span="8">
-          <div class="grid-content bg-purple-light"></div>
+          <div class="grid-content bg-purple-light">
+            <h2>后台管理</h2>
+          </div>
         </el-col>
         <el-col :span="8">
-          <div class="grid-content bg-purple"></div>
+          <div class="grid-content bg-purple">
+            <el-button type="danger" icon="el-icon-delete" circle @click="loginout"></el-button>
+          </div>
         </el-col>
       </el-row>
     </el-header>
@@ -91,7 +95,28 @@
 
 <script>
 export default {
-  name: "index"
+  name: "index",
+  beforeCreate() {
+    if (!sessionStorage.getItem("token")) {
+      this.$message.warning("请登录");
+      this.$router.push("/login");
+    }
+  },
+  methods: {
+    //退出登录
+    loginout() {
+      this.$confirm("是否确定退出登录?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          sessionStorage.removeItem("token");
+          this.$router.push("/login");
+        })
+        .catch(() => {});
+    }
+  }
 };
 </script>
 
