@@ -1,9 +1,12 @@
 // 抽取所以有关网络请求的文件;
 import axios from 'axios';
 
+// 设置基地址
+axios.defaults.baseURL='http://localhost:8888/api/private/v1/'
+
 const request = {
-    sayHis() {
-        console.log('你好')
+    login(params){
+       return axios.post('login',params);
     }
 }
 

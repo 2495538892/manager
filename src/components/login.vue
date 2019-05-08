@@ -52,12 +52,20 @@ export default {
   },
   // 方法;
   methods: {
-    // 点击登录验证表单格式的方法;绑定点击事件传入一个参数 ,然后通过设置ref属性等于传入的参数(字符串的参数)
+    // 点击登录验证表单格式的方法;绑定点击事件传入一个参数 ,然后通过设置ref属性,属性的值等于传入的参数(字符串的参数)
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          // 格式正确
-        this.$message.success('登录成功')
+          // 格式正确就使用抽出来请求插件;
+          this.$request.login(this.loginForm).then(res => {
+            console.log(res);
+            if (res.data.meta.status == 400) {
+              this.$message.error("用户名或密码错误");
+            } else if (res.data.meta.status == 200) {
+              this.$message.success("登录成功");
+              this.$router.push("/");
+            }
+          });
         } else {
           //格式错误
           this.$message.error("用户名或密码格式错误");
