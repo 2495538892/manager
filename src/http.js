@@ -4,6 +4,8 @@ import axios from 'axios';
 // 导入vue
 import Vue from 'vue'
 
+//导入路由
+import router from './router'
 // 设置基地址
 axios.defaults.baseURL = 'http://localhost:8888/api/private/v1/'
 
@@ -18,7 +20,15 @@ axios.interceptors.request.use(function (config) {
 
 // 响应拦截器
 axios.interceptors.response.use(function (response) {
-    Vue.prototype.$message.success(response.data.meta.msg)
+    if (response.data.meta.status == 200) {
+        Vue.prototype.$message.success(response.data.meta.msg)
+    } else if (response.data.meta.status == 400 && response.data.meta.msg == '无效token') {
+        // 防止伪造token
+        Vue.prototype.$message.warning('你在伪造token')
+        sessionStorage.clear('token')
+        router.push('login')
+    }
+
     return response;
 }, function (error) {
     return Promise.reject(error);
@@ -61,8 +71,13 @@ const request = {
         return axios.get('roles')
     },
     // 修改角色分配;
-    Updataroles(params){
-        return axios.put(`users/${params.id}/role`,{rid:params.rid})
+    Updataroles(params) {
+        return axios.put(`users/${params.id}/role`, { rid: params.rid })
+    },
+
+    // 添加角色
+    addRoles(params) {
+        return axios.post(`roles`, params)
     }
 
 }
