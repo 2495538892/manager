@@ -127,7 +127,19 @@ export default {
       });
     },
     handlReols() {},
-    handleDelete() {},
+    handleDelete(index, row) {
+      this.$confirm("是否确定删除此角色?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.$request.deleteRoles(row.id).then(res => {
+            this.getroles();
+          });
+        })
+        .catch(() => {});
+    },
 
     // 获取角色列表;
     getroles() {
@@ -147,6 +159,7 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
+          // 添加角色
           if (formName === "adduserForm") {
             this.$request.addRoles(this.adduserForm).then(res => {
               console.log(res);
@@ -155,6 +168,7 @@ export default {
                 this.addVisible = false;
               }
             });
+            // 编辑角色
           } else if (formName === "editForm") {
             this.editForm.id = this.editForm.roleId;
             this.$request.editRoles(this.editForm).then(res => {

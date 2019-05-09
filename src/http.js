@@ -91,6 +91,11 @@ const request = {
     // 提交编辑角色信息;
     editRoles(params){
         return axios.put(`roles/${params.id}`,{roleName:params.roleName,roleDesc:params.roleDesc})
+    },
+    
+    // 删除角色
+    deleteRoles(id){
+        return axios.delete(`roles/${id}`)
     }
 
 }
