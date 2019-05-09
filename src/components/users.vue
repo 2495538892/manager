@@ -12,7 +12,12 @@
     <div class="users-btn">
       <el-row>
         <el-col :span="6">
-          <el-input placeholder="请输入内容" class="input-with-select" v-model="userData.query" @keypress.13.native="getuser">
+          <el-input
+            placeholder="请输入内容"
+            class="input-with-select"
+            v-model="userData.query"
+            @keypress.13.native="getuser"
+          >
             <el-button slot="append" icon="el-icon-search" @click="getuser"></el-button>
           </el-input>
         </el-col>
@@ -51,7 +56,13 @@
               size="mini"
               @click="handleEdit(scope.$index, scope.row)"
             ></el-button>
-            <el-button type="success" icon="el-icon-check" plain size="mini"></el-button>
+            <el-button
+              type="success"
+              icon="el-icon-check"
+              plain
+              size="mini"
+              @click="handlReols(scope.$index, scope.row)"
+            ></el-button>
             <el-button
               type="danger"
               icon="el-icon-delete"
@@ -67,11 +78,13 @@
     <!-- 分页 -->
     <div class="pagination">
       <el-pagination
-        :current-page="1"
-        :page-sizes="[10, 20, 30, 40]"
-        :page-size="10"
+        :current-page="userData.pagenum"
+        :page-sizes="[1, 2, 3, 4]"
+        :page-size="userData.pagesize"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="100"
+        :total="total"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
       ></el-pagination>
     </div>
 
@@ -96,6 +109,50 @@
         <el-button type="primary" @click="submitForm('adduserForm')">确 定</el-button>
       </div>
     </el-dialog>
+
+    <!-- 编辑用户信息 -->
+    <el-dialog title="编辑用户" :visible.sync="editVisible" class="add">
+      <el-form :model="edituserForm" :rules="rules" ref="edituserForm">
+        <el-form-item label="用户名" label-width="120px" prop="username">
+          <el-input v-model="edituserForm.username" autocomplete="off" class="add-btn" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" label-width="120px" prop="email">
+          <el-input v-model="edituserForm.email" autocomplete="off" class="add-btn"></el-input>
+        </el-form-item>
+        <el-form-item label="电话" label-width="120px" prop="mobile">
+          <el-input v-model="edituserForm.mobile" autocomplete="off" class="add-btn"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="editVisible = false">取 消</el-button>
+        <el-button type="primary" @click="submitForm('edituserForm')">确 定</el-button>
+      </div>
+    </el-dialog>
+
+    <!-- 角色管理 -->
+    <el-dialog title="角色分配" :visible.sync="rolesVisible" class="add">
+      <el-form :model="rolesForm" :rules="rules" ref="rolesForm">
+        <el-form-item label="用户名" label-width="120px" prop="username">
+          <el-input v-model="rolesForm.username" autocomplete="off" class="add-btn" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="角色分配" label-width="120px" prop="email">
+          <el-select v-model="value" placeholder="请选择">
+            <!-- 因为新建的用户没有分配角色,它的rid=-1,所以为了好看点,就写一个如果rid等于-1的就让他显示'未分配角色' -->
+            <el-option label="未分配角色" :value="-1"></el-option>
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.roleName"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="rolesVisible = false">取 消</el-button>
+        <el-button type="primary" @click="submitForm('rolesForm')">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -109,9 +166,9 @@ export default {
       userData: {
         query: "",
         //当前页
-        pagenum: "1",
+        pagenum: 1,
         //页容量
-        pagesize: "10"
+        pagesize: 10
       },
       // 添加用户的数据字段
       adduserForm: {
@@ -131,7 +188,26 @@ export default {
           { min: 6, max: 12, message: "长度在 6 到 12 个字符", trigger: "blur" }
         ]
       },
-      addVisible: false
+      addVisible: false,
+
+      // 总数;
+      total: 0,
+
+      // 编辑信息的字段;
+      editVisible: false,
+      edituserForm: {
+        username: "",
+        email: "",
+        mobile: ""
+      },
+
+      // 角色分配字段;
+      rolesVisible: false,
+      // option是所以的下拉选项;
+      options: [],
+      // value是默认的角色选中
+      value: "",
+      rolesForm: ""
     };
   },
   created() {
@@ -145,6 +221,12 @@ export default {
     handleEdit(index, row) {
       console.log(index);
       console.log(row);
+      // 点击编辑通过id获取用户的信息,进入编辑状态;
+      this.$request.getuserbyID(row.id).then(res => {
+        console.log(res);
+        this.edituserForm = res.data.data;
+        this.editVisible = true;
+      });
     },
     // 删除
     handleDelete(index, row) {
@@ -162,11 +244,26 @@ export default {
         })
         .catch(() => {});
     },
+    // 勾勾
+    handlReols(index, row) {
+      this.$request.getuserbyID(row.id).then(res => {
+        console.log(res);
+        this.rolesForm = res.data.data;
+        this.rolesVisible = true;
+        this.value = res.data.data.rid;
+        // 然后在调用英雄列表;
+        this.$request.roles().then(res => {
+          console.log(res);
+          this.options = res.data.data;
+        });
+      });
+    },
     //获取用户列表的方法;
     getuser() {
       this.$request.getuser(this.userData).then(res => {
-        // console.log(res);
+        console.log(res);
         this.tableData = res.data.data.users;
+        this.total = res.data.data.total;
       });
     },
 
@@ -174,13 +271,35 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.$request.addusers(this.adduserForm).then(res => {
-            console.log(res);
-            this.addVisible = false;
-            this.getuser();
-            // 重置;
-            this.$refs[formName].resetFields();
-          });
+          // 因为点击确定有两个两个同名的事件,但是执行的代码不相同,所以判断一下传过来的字符串;
+          // 这个是添加的逻辑
+          if (formName == "adduserForm") {
+            this.$request.addusers(this.adduserForm).then(res => {
+              console.log(res);
+              this.addVisible = false;
+              this.getuser();
+              // 重置;
+              this.$refs[formName].resetFields();
+            });
+            // 这个是角色修改的逻辑
+          } else if (formName == "rolesForm") {
+            this.$request
+              .Updataroles({ id: this.rolesForm.id, rid: this.value })
+              .then(res => {
+                console.log(res);
+                this.rolesVisible = false;
+                this.getuser();
+              });
+            // 这个是编辑的逻辑
+          } else {
+            this.$request.UpdataUser(this.edituserForm).then(res => {
+              console.log(res);
+              if (res.data.meta.status == 200) {
+                this.getuser();
+                this.editVisible = false;
+              }
+            });
+          }
         } else {
           console.log("error submit!!");
           return false;
@@ -195,6 +314,18 @@ export default {
         .then(res => {
           console.log(res);
         });
+    },
+
+    // 分页事件
+    handleSizeChange(val) {
+      console.log(val);
+      this.userData.pagesize = val;
+      this.getuser();
+    },
+    handleCurrentChange(val) {
+      console.log(val);
+      this.userData.pagenum = val;
+      this.getuser();
     }
   }
 };

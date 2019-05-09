@@ -34,6 +34,9 @@ import orders from './components/orders.vue'
 
 // 导入嵌套路由8
 import reports from './components/reports.vue'
+
+// 导入嵌套路由9
+import error from './components/error.vue'
 //路由规则
 const routes = [
     //1.登录的规则
@@ -45,7 +48,7 @@ const routes = [
         // 3.嵌套路由规则
         children: [
             //重定向;
-            {path:'',redirect: '/users'},
+            { path: '', redirect: '/users' },
             //嵌套路由规则1
             { path: 'users', component: users },
             // 嵌套路由规则2
@@ -62,15 +65,33 @@ const routes = [
             { path: 'orders', component: orders },
             // 嵌套路由规则8
             { path: 'reports', component: reports },
+            // 嵌套路由规则9
+            { path: 'error', component: error },
         ]
 
     },
 ]
 
+
 // 实例化路由对象;
 const router = new VueRouter({
     //挂载路由对象
     routes
+
+})
+
+// 路由路由守卫导航(就是url地址发生改变时的回调函数)
+router.beforeEach((to, from, next) => {
+    // from是指从哪个地址开始跳转;
+    // to是指跳到哪个地址
+    if (to.matched.length == 0) {
+        next('error')
+    } else {
+        next()
+    }
+    console.log(to)
+    // next必须写
+
 })
 
 // 暴露

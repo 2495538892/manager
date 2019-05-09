@@ -4,6 +4,8 @@ import axios from 'axios';
 // 导入vue
 import Vue from 'vue'
 
+//导入路由
+import router from './router'
 // 设置基地址
 axios.defaults.baseURL = 'http://localhost:8888/api/private/v1/'
 
@@ -18,7 +20,18 @@ axios.interceptors.request.use(function (config) {
 
 // 响应拦截器
 axios.interceptors.response.use(function (response) {
-    Vue.prototype.$message.success(response.data.meta.msg)
+    if (response.data.meta.status == 200) {
+        Vue.prototype.$message.success(response.data.meta.msg)
+    } else if (response.data.meta.status == 400 && response.data.meta.msg == '无效token') {
+        // 防止伪造token
+        Vue.prototype.$message.warning('你在伪造token')
+        sessionStorage.clear('token')
+        router.push('login')
+        //因为我们在其他页面获取的数据的时候(正确的token的时候)response.data.data是有值的,如果伪造token它的值是null,
+        //此时如果用点语法会报错,所以我们就给他一个空数组
+        response.data.data=[]
+    }
+
     return response;
 }, function (error) {
     return Promise.reject(error);
@@ -38,13 +51,58 @@ const request = {
         return axios.delete(`users/${id}`)
     },
     // 封装添加用户的请求
-    addusers(params){
-        return axios.post('users',params)
+    addusers(params) {
+        return axios.post('users', params)
     },
     // 封装修改状态的请求;
-    changestate(params){
+    changestate(params) {
         return axios.put(`users/${params.uId}/state/${params.type}`)
+    },
+    //封装编辑用户信息的请求
+    // 先要获取用户的信息,进入编辑状态
+    getuserbyID(id) {
+        return axios.get(`users/${id}`)
+    },
+    // 保存编辑
+    UpdataUser(params) {
+        return axios.put(`users/${params.id}`, { email: params.email, mobile: params.mobile })
+    },
+
+    // 角色管理 1.先进入角色管理页,一样先获取用户的信息,上面的getuserbyID,然后在调用角色列表;
+    // 角色列表
+    roles() {
+        return axios.get('roles')
+    },
+    // 修改角色分配;
+    Updataroles(params) {
+        return axios.put(`users/${params.id}/role`, { rid: params.rid })
+    },
+
+    // 添加角色
+    addRoles(params) {
+        return axios.post(`roles`, params)
+    },
+
+    // 根据id查询角色信息;
+    getrolesByID(id){
+        return axios.get(`roles/${id}`)
+    },
+    
+    // 提交编辑角色信息;
+    editRoles(params){
+        return axios.put(`roles/${params.id}`,{roleName:params.roleName,roleDesc:params.roleDesc})
+    },
+    
+    // 删除角色
+    deleteRoles(id){
+        return axios.delete(`roles/${id}`)
+    },
+
+    // 获取所有权限列表;
+    getRights(){
+        return axios.get(`rights/list`)
     }
+
 }
 
 // 在全局需要用到就暴露出去
