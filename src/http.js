@@ -38,22 +38,33 @@ const request = {
         return axios.delete(`users/${id}`)
     },
     // 封装添加用户的请求
-    addusers(params){
-        return axios.post('users',params)
+    addusers(params) {
+        return axios.post('users', params)
     },
     // 封装修改状态的请求;
-    changestate(params){
+    changestate(params) {
         return axios.put(`users/${params.uId}/state/${params.type}`)
     },
     //封装编辑用户信息的请求
     // 先要获取用户的信息,进入编辑状态
-    getuserbyID(id){
+    getuserbyID(id) {
         return axios.get(`users/${id}`)
     },
     // 保存编辑
-    UpdataUser(params){
-        return axios.put(`users/${params.id}`,{email:params.email,mobile:params.mobile})
+    UpdataUser(params) {
+        return axios.put(`users/${params.id}`, { email: params.email, mobile: params.mobile })
+    },
+
+    // 角色管理 1.先进入角色管理页,一样先获取用户的信息,上面的getuserbyID,然后在调用角色列表;
+    // 角色列表
+    roles() {
+        return axios.get('roles')
+    },
+    // 修改角色分配;
+    Updataroles(params){
+        return axios.put(`users/${params.id}/role`,{rid:params.rid})
     }
+
 }
 
 // 在全局需要用到就暴露出去

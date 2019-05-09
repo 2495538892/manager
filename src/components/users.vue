@@ -56,7 +56,13 @@
               size="mini"
               @click="handleEdit(scope.$index, scope.row)"
             ></el-button>
-            <el-button type="success" icon="el-icon-check" plain size="mini"></el-button>
+            <el-button
+              type="success"
+              icon="el-icon-check"
+              plain
+              size="mini"
+              @click="handlReols(scope.$index, scope.row)"
+            ></el-button>
             <el-button
               type="danger"
               icon="el-icon-delete"
@@ -122,6 +128,31 @@
         <el-button type="primary" @click="submitForm('edituserForm')">确 定</el-button>
       </div>
     </el-dialog>
+
+    <!-- 角色管理 -->
+    <el-dialog title="角色分配" :visible.sync="rolesVisible" class="add">
+      <el-form :model="rolesForm" :rules="rules" ref="rolesForm">
+        <el-form-item label="用户名" label-width="120px" prop="username">
+          <el-input v-model="rolesForm.username" autocomplete="off" class="add-btn" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="角色分配" label-width="120px" prop="email">
+          <el-select v-model="value" placeholder="请选择">
+            <!-- 因为新建的用户没有分配角色,它的rid=-1,所以为了好看点,就写一个如果rid等于-1的就让他显示'未分配角色' -->
+            <el-option label="未分配角色" :value="-1"></el-option>
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.roleName"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="rolesVisible = false">取 消</el-button>
+        <el-button type="primary" @click="submitForm('rolesForm')">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -168,7 +199,15 @@ export default {
         username: "",
         email: "",
         mobile: ""
-      }
+      },
+
+      // 角色分配字段;
+      rolesVisible: false,
+      // option是所以的下拉选项;
+      options: [],
+      // value是默认的角色选中
+      value: "",
+      rolesForm: ""
     };
   },
   created() {
@@ -205,6 +244,20 @@ export default {
         })
         .catch(() => {});
     },
+    // 勾勾
+    handlReols(index, row) {
+      this.$request.getuserbyID(row.id).then(res => {
+        console.log(res);
+        this.rolesForm = res.data.data;
+        this.rolesVisible = true;
+        this.value = res.data.data.rid;
+        // 然后在调用英雄列表;
+        this.$request.roles().then(res => {
+          console.log(res);
+          this.options = res.data.data;
+        });
+      });
+    },
     //获取用户列表的方法;
     getuser() {
       this.$request.getuser(this.userData).then(res => {
@@ -228,6 +281,15 @@ export default {
               // 重置;
               this.$refs[formName].resetFields();
             });
+            // 这个是角色修改的逻辑
+          } else if (formName == "rolesForm") {
+            this.$request
+              .Updataroles({ id: this.rolesForm.id, rid: this.value })
+              .then(res => {
+                console.log(res);
+                this.rolesVisible = false;
+                this.getuser();
+              });
             // 这个是编辑的逻辑
           } else {
             this.$request.UpdataUser(this.edituserForm).then(res => {
