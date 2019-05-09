@@ -12,8 +12,13 @@
     <div class="users-btn">
       <el-row>
         <el-col :span="6">
-          <el-input placeholder="请输入内容" class="input-with-select">
-            <el-button slot="append" icon="el-icon-search"></el-button>
+          <el-input
+            placeholder="请输入内容"
+            class="input-with-select"
+            v-model="userData.query"
+            @keypress.13.native="getuser"
+          >
+            <el-button slot="append" icon="el-icon-search" @click="getuser"></el-button>
           </el-input>
         </el-col>
         <el-col :span="6">
