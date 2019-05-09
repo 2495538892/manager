@@ -67,6 +67,22 @@
         <el-button type="primary" @click="submitForm('adduserForm')">确 定</el-button>
       </div>
     </el-dialog>
+
+    <!-- 编辑角色-->
+    <el-dialog title="编辑角色" :visible.sync="editVisible" class="add">
+      <el-form :model="editForm" :rules="rules" ref="editForm">
+        <el-form-item label="角色名称" label-width="120px" prop="roleName">
+          <el-input v-model="editForm.roleName" autocomplete="off" class="add-btn"></el-input>
+        </el-form-item>
+        <el-form-item label="角色描述" label-width="120px">
+          <el-input v-model="editForm.roleDesc" autocomplete="off" class="add-btn"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="editVisible = false">取 消</el-button>
+        <el-button type="primary" @click="submitForm('editForm')">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -88,6 +104,13 @@ export default {
           { required: true, message: "请输入角色名", trigger: "blur" },
           { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" }
         ]
+      },
+
+      //编辑角色的字段;
+      editVisible: false,
+      editForm: {
+        roleName: "",
+        roleDesc: ""
       }
     };
   },
@@ -95,7 +118,14 @@ export default {
     this.getroles();
   },
   methods: {
-    handleEdit() {},
+    handleEdit(index, row) {
+      // 点击编辑通过id获取角色信息;
+      this.$request.getrolesByID(row.id).then(res => {
+        console.log(res);
+        this.editVisible = true;
+        this.editForm = res.data.data;
+      });
+    },
     handlReols() {},
     handleDelete() {},
 
@@ -117,13 +147,23 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.$request.addRoles(this.adduserForm).then(res => {
-            console.log(res);
-            if (res.data.meta.status == 200) {
-              this.getroles();
-              this.addVisible = false;
-            }
-          });
+          if (formName === "adduserForm") {
+            this.$request.addRoles(this.adduserForm).then(res => {
+              console.log(res);
+              if (res.data.meta.status == 201) {
+                this.getroles();
+                this.addVisible = false;
+              }
+            });
+          } else if (formName === "editForm") {
+            this.editForm.id = this.editForm.roleId;
+            this.$request.editRoles(this.editForm).then(res => {
+              if (res.data.meta.status == 200) {
+                this.editVisible = false;
+                this.getroles();
+              }
+            });
+          }
         } else {
           console.log("error submit!!");
           return false;

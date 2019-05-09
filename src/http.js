@@ -81,6 +81,16 @@ const request = {
     // 添加角色
     addRoles(params) {
         return axios.post(`roles`, params)
+    },
+
+    // 根据id查询角色信息;
+    getrolesByID(id){
+        return axios.get(`roles/${id}`)
+    },
+    
+    // 提交编辑角色信息;
+    editRoles(params){
+        return axios.put(`roles/${params.id}`,{roleName:params.roleName,roleDesc:params.roleDesc})
     }
 
 }
