@@ -27,6 +27,9 @@ axios.interceptors.response.use(function (response) {
         Vue.prototype.$message.warning('你在伪造token')
         sessionStorage.clear('token')
         router.push('login')
+        //因为我们在其他页面获取的数据的时候(正确的token的时候)response.data.data是有值的,如果伪造token它的值是null,
+        //此时如果用点语法会报错,所以我们就给他一个空数组
+        response.data.data=[]
     }
 
     return response;
