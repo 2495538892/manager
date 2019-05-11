@@ -16,7 +16,7 @@
 <script>
 import echarts from "echarts";
 export default {
-  name: "users",
+  name: "reports",
   data() {
     return {
       // 视图的数据字段;
@@ -116,6 +116,10 @@ export default {
         // 因为数据中的只要四个字段,可以选择删掉原数据多余的字段,也可以通过遍历返回的数据去替换原有的数据
         this.option[key] = resportData[key];
       }
+      // 恢复X轴没有顶置,添加两个字段即可让x顶置;
+      this.option.xAxis[0].type = "category";
+      this.option.xAxis[0].boundaryGap = false;
+  
       // 替换完后在来渲染页面数据,这个渲染不可以放在请求的外面.因为请求是异步的,如果在外面,请求的同时已经在渲染了,所以更新不了数据;
       var myChart = echarts.init(document.getElementById("main"));
       myChart.setOption(this.option);
