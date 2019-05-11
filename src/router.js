@@ -76,8 +76,9 @@ const routes = [
 // 实例化路由对象;
 const router = new VueRouter({
     //挂载路由对象
-    routes
-
+    routes,
+    //通过History模式来让url美化
+    mode: 'history',
 })
 
 // 路由路由守卫导航(就是url地址发生改变时的回调函数)

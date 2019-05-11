@@ -101,8 +101,22 @@ const request = {
     // 获取所有权限列表;
     getRights(){
         return axios.get(`rights/list`)
-    }
+    },
 
+    // 获取商品列表数据
+    getGoods(params){
+        return axios.get('goods',{params})
+    },
+
+    // 试图数据(resport)
+    getresport(){
+        return axios.get('reports/type/1')
+    },
+
+    // 获取订单列表
+    getOrders(params){
+        return axios.get('orders',{params})
+    }
 }
 
 // 在全局需要用到就暴露出去
