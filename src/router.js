@@ -37,6 +37,12 @@ import reports from './components/reports.vue'
 
 // 导入嵌套路由9
 import error from './components/error.vue'
+
+// 导入商品路由的嵌套路由
+import addGoods from './components/addGoods.vue'
+
+// 导入抽取出来的商品数据表格
+import goodTable from './components/goodTable'
 //路由规则
 const routes = [
     //1.登录的规则
@@ -56,7 +62,14 @@ const routes = [
             // 嵌套路由规则3
             { path: 'rights', component: rights },
             // 嵌套路由规则4
-            { path: 'goods', component: goods },
+            {
+                path: 'goods', component: goods,
+
+                children: [
+                    { path: 'addGoods', component: addGoods },
+                    { path: '', component: goodTable }
+                ]
+            },
             // 嵌套路由规则5
             { path: 'params', component: params },
             // 嵌套路由规则6
@@ -86,7 +99,7 @@ router.beforeEach((to, from, next) => {
     // from是指从哪个地址开始跳转;
     // to是指跳到哪个地址
     if (to.matched.length == 0) {
-        next('error')
+        next('/error')
     } else {
         next()
     }

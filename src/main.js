@@ -14,10 +14,15 @@ import request from './http'
 //通过use来调用install
 Vue.use(request)
 
+// 导入仓库
+import store from './store'
+
 Vue.config.productionTip = false
 
 new Vue({
   render: h => h(App),
   // 载入抽取处理的路由
-  router
+  router,
+  // 挂载仓库
+  store
 }).$mount('#app')
