@@ -17,24 +17,43 @@
     <!-- 联级 -->
     <div class="params-cascader">
       <span class="text">请选择商品风类:</span>
-      <el-cascader expand-trigger="hover" :options="options" v-model="selectedOptions2"></el-cascader>
+      <el-cascader expand-trigger="hover" :options="options" @change="change" :props="props"></el-cascader>
     </div>
 
     <!-- tab栏 -->
     <div class="parms-tab">
       <el-tabs v-model="activeName">
         <el-tab-pane label="动态参数" name="first">
-          <el-table :data="tableData" style="width: 100%">
-            <el-table-column prop="date" label="日期" width="180"></el-table-column>
-            <el-table-column prop="name" label="姓名" width="180"></el-table-column>
-            <el-table-column prop="address" label="地址"></el-table-column>
+          <el-table :data="dynamic" style="width: 100%" border>
+            <el-table-column type="index" width="50"></el-table-column>
+            <el-table-column prop="attr_vals" label="商品参数" width="350"></el-table-column>
+            <el-table-column prop="address" label="操作">
+              <template slot-scope="scope">
+                <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                <el-button
+                  size="mini"
+                  type="danger"
+                  @click="handleDelete(scope.$index, scope.row)"
+                >删除</el-button>
+              </template>
+            </el-table-column>
           </el-table>
         </el-tab-pane>
         <el-tab-pane label="静态参数" name="second">
-          <el-table :data="tableData" style="width: 100%">
-            <el-table-column prop="date" label="日期" width="180"></el-table-column>
-            <el-table-column prop="name" label="姓名" width="180"></el-table-column>
-            <el-table-column prop="address" label="地址"></el-table-column>
+          <el-table :data="Static" style="width: 100%">
+            <el-table-column type="index" width="50"></el-table-column>
+            <el-table-column prop="attr_name" label="属性名称" width="180"></el-table-column>
+            <el-table-column prop="attr_vals" label="属性值" width="180"></el-table-column>
+            <el-table-column prop="address" label="操作">
+              <template slot-scope="scope">
+                <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                <el-button
+                  size="mini"
+                  type="danger"
+                  @click="handleDelete(scope.$index, scope.row)"
+                >删除</el-button>
+              </template>
+            </el-table-column>
           </el-table>
         </el-tab-pane>
       </el-tabs>
@@ -47,7 +66,8 @@ export default {
   name: "params",
   data: function() {
     return {
-      tableData: [],
+      Static: [],
+      dynamic: [],
       // 联级的数据
       options: [
         {
@@ -318,10 +338,39 @@ export default {
         }
       ],
       selectedOptions2: [],
-
+      props: {
+        value: "cat_id",
+        label: "cat_name",
+        children: "children"
+      },
       // tab栏的数据
       activeName: "first"
     };
+  },
+  methods: {
+    // 级联选择器提供的获取选择后的值;
+    change(val) {
+      console.log(val);
+      // 获取静态参数或者动态参数传递的id只需要最后一个id就可以了.因为最后一个才是商品;
+      const id = val[2];
+      // 获取静态参数
+      this.$request.getStatic(id).then(res => {
+        console.log(res);
+        this.Static = res.data.data;
+      });
+      // 获取动态参数
+      this.$request.getDynamic(id).then(res => {
+        console.log(res);
+        this.dynamic = res.data.data;
+      });
+    }
+  },
+  created() {
+    // 获取商品分类的数据,作为级联菜单的数据;
+    this.$request.getCategories().then(res => {
+      console.log(res);
+      this.options = res.data.data;
+    });
   }
 };
 </script>

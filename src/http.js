@@ -29,7 +29,7 @@ axios.interceptors.response.use(function (response) {
         router.push('login')
         //因为我们在其他页面获取的数据的时候(正确的token的时候)response.data.data是有值的,如果伪造token它的值是null,
         //此时如果用点语法会报错,所以我们就给他一个空数组
-        response.data.data=[]
+        response.data.data = []
     }
 
     return response;
@@ -84,23 +84,70 @@ const request = {
     },
 
     // 根据id查询角色信息;
-    getrolesByID(id){
+    getrolesByID(id) {
         return axios.get(`roles/${id}`)
     },
-    
+
     // 提交编辑角色信息;
-    editRoles(params){
-        return axios.put(`roles/${params.id}`,{roleName:params.roleName,roleDesc:params.roleDesc})
+    editRoles(params) {
+        return axios.put(`roles/${params.id}`, { roleName: params.roleName, roleDesc: params.roleDesc })
     },
-    
+
     // 删除角色
-    deleteRoles(id){
+    deleteRoles(id) {
         return axios.delete(`roles/${id}`)
     },
 
     // 获取所有权限列表;
-    getRights(){
+    getRights() {
         return axios.get(`rights/list`)
+    },
+
+    // 获取商品列表数据
+    getGoods(params) {
+        return axios.get('goods', { params })
+    },
+
+    // 试图数据(resport)
+    getresport() {
+        return axios.get('reports/type/1')
+    },
+
+    // 获取订单列表
+    getOrders(params) {
+        return axios.get('orders', { params })
+    },
+
+    // 删除角色权限
+    deleteroles(params) {
+        return axios.delete(`roles/${params.roleId}/rights/${params.rightId}`)
+    },
+
+    // 获取树形权限数据
+    getRigthTree() {
+        return axios.get(`rights/tree`)
+    },
+
+    //角色授权(编辑授权)
+    setRoleright(params) {
+        return axios.post(`roles/${params.roleId}/rights`, { rids: params.rids })
+    },
+    // 获取左侧菜单权限
+    getmenus() {
+        return axios.get('menus')
+    },
+
+    // 获取商品分类
+    getCategories() {
+        return axios.get(`categories?type=3`)
+    },
+    // 获取静态参数;
+    getStatic(id){
+        return axios.get(`categories/${id}/attributes?sel=only`)
+    },
+
+    getDynamic(id){
+        return axios.get(`categories/${id}/attributes?sel=many`)
     }
 
 }

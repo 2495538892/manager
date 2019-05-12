@@ -1,29 +1,7 @@
 <template>
-  <div class="users-content">
-    <!-- 面包屑 -->
-    <div class="bread-header">
-      <el-breadcrumb separator-class="el-icon-arrow-right" class="bread">
-        <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item>商品管理</el-breadcrumb-item>
-        <el-breadcrumb-item>商品列表</el-breadcrumb-item>
-      </el-breadcrumb>
-    </div>
-    <!-- 输入框和添加用户  -->
-    <div class="users-btn">
-      <el-row>
-        <el-col :span="6">
-          <el-input placeholder="请输入内容" class="input-with-select">
-            <el-button slot="append" icon="el-icon-search"></el-button>
-          </el-input>
-        </el-col>
-        <el-col :span="6">
-          <el-button type="success" plain @click="$router.push('goods/addGoods')">成功按钮</el-button>
-        </el-col>
-      </el-row>
-    </div>
-
+  <div>
     <!-- 表格 -->
-    <!-- <div class="tabled">
+    <div class="tabled">
       <el-table :data="tableData" style="width: 100%" border>
         <el-table-column type="index"></el-table-column>
         <el-table-column prop="goods_name" label="商品名称" width="344"></el-table-column>
@@ -50,11 +28,9 @@
           </template>
         </el-table-column>
       </el-table>
-    </div> -->
+    </div>
 
-    <router-view></router-view>
-
-    <!-- 分页
+    <!-- 分页 -->
     <div class="pagination">
       <el-pagination
         :current-page="Goodsdata.pagenum"
@@ -65,14 +41,13 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
       ></el-pagination>
-    </div> -->
+    </div>
   </div>
 </template>
 
 <script>
-import moment from "moment";
+import moment from 'moment'
 export default {
-  name: "goods",
   data: function() {
     return {
       tableData: [],
@@ -114,15 +89,5 @@ export default {
 };
 </script>
 
-<style lang='scss'>
-.bread-header {
-  height: 40px;
-  background: #ddddee;
-  .bread {
-    line-height: 40px;
-  }
-}
-.users-btn {
-  margin: 5px 0;
-}
+<style>
 </style>
